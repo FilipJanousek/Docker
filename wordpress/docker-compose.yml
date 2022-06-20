@@ -1,0 +1,31 @@
+version: '3.3'
+
+services:
+  apache:
+    container_name: apache-my-app
+    build: ./docker/httpd
+    links:
+      - php
+    ports:
+      - "80:80"
+    volumes:
+      - ./app:/usr/local/apache2/htdocs
+  
+  php:
+    container_name: php-my-app
+    build: ./docker/php
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./app:/usr/local/apache2/htdocs
+    working_dir: /usr/local/apache2/htdocs
+
+  mysql: 
+    container_name: mysql-my-app
+    build: ./docker/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 'admin'
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql:/var/lib/mysql
